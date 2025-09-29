@@ -1,0 +1,30 @@
+name: Build HL7 XML Converter
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Amazon Corretto JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 17
+          cache: maven
+
+      - name: Build with Maven (create fat jar)
+        run: mvn -B clean package
+
+      - name: Upload Jar Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hl7-xml-converter-jar
+          path: target/*-with-dependencies.jar
